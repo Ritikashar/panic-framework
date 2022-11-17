@@ -1,8 +1,9 @@
 import getopt
 import os
 import sys
-
+import pandas as pd
 import requests
+import re
 
 
 akamai_netstorage_ftp_username = os.environ.get('AKAMAI_NETSTORAGE_FTP_USERNAME','') 
@@ -12,19 +13,21 @@ akamai_netstorage_ftp_path = os.environ.get('AKAMAI_NETSTORAGE_PATH','')
 
 
 
-request_path = None #rp 
+request_path = None #r
 cluster = None # c 
 request_type = None # t
-file_storage_path = None #fp
+file_storage_path = None #f
+header_file_location = None #h
 data = None
 headers = None 
 query_params = None
 
 
+
 argumentList = sys.argv[1:]
  
-options = "r:c:t:f:"
-long_options = ["RequestPath", "Cluster", "RequestType", "FileStoragePath"]
+options = "r:c:t:f:h:"
+long_options = ["RequestPath", "Cluster", "RequestType", "FileStoragePath", "HeaderFileLocation"]
  
 try:
     arguments, values = getopt.getopt(argumentList, options, long_options)
@@ -46,9 +49,25 @@ try:
         elif currentArgument in ("-f", "--FileStoragePath"):
             file_storage_path = currentValue
             print("FileStoragePath = ", file_storage_path)
+        
+        elif currentArgument in ("-h", "--HeaderFileLocation"):
+            header_file_location = currentValue
+            print("HeaderFileLocation = ",header_file_location)
+
 
 except getopt.error as err:
     print (str(err))
+
+
+#reading headers
+headers_file_content = requests.get(header_file_location)
+headers_text = headers_file_content.text.strip()
+
+header_json = re.search(r'\{(.|\s)*\}',  headers_text)
+header_json = header_json.group(0).replace('false', 'False')
+headers = eval(header_json)
+
+print(headers) 
 
 
 response = requests.get(request_path, headers=headers)
@@ -64,4 +83,4 @@ print(response)
 
 
 
-#curl -v 'https://webx.hotstar.com/api/internal/bff/v2/slug/ph/paywall'   -H 'authority: webx.hotstar.com'   -H 'accept: application/json, text/plain, */*'   -H 'accept-language: eng'   -H 'cache-control: no-cache'   -H 'hotstarauth: st=1668236089~exp=1668242089~acl=/*~hmac=ff38e75337d7970078b99ac1a1b4d60562ed5b1265cc77b880b2b9e27450da0f'   -H 'pragma: no-cache'   -H 'referer: https://webx.hotstar.com/ph/home'   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'   -H 'x-country-code: ph'   -H 'x-hs-accept-language: eng'   -H 'x-hs-platform: web'
+
