@@ -4,15 +4,11 @@ import sys
 import pandas as pd
 import requests
 import re
-
-
-akamai_netstorage_ftp_username = os.environ.get('AKAMAI_NETSTORAGE_FTP_USERNAME','') 
-akamai_netstorage_ftp_password = os.environ.get('AKAMAI_NETSTORAGE_FTP_PASSWORD','')
-akamai_netstorage_ftp_hostname = os.environ.get('AKAMAI_NETSTORAGE_FTP_HOSTNAME','') 
-akamai_netstorage_ftp_path = os.environ.get('AKAMAI_NETSTORAGE_PATH','') 
+from dotenv import dotenv_values
 
 
 
+environment_name = None #e
 request_path = None #r
 cluster = None # c 
 request_type = None # t
@@ -22,19 +18,20 @@ data = None
 headers = None 
 query_params = None
 
-
-
 argumentList = sys.argv[1:]
  
-options = "r:c:t:f:h:"
-long_options = ["RequestPath", "Cluster", "RequestType", "FileStoragePath", "HeaderFileLocation"]
+options = "e:r:c:t:f:h:"
+long_options = ["EnviornmentName", "RequestPath", "Cluster", "RequestType", "FileStoragePath", "HeaderFileLocation"]
  
 try:
     arguments, values = getopt.getopt(argumentList, options, long_options)
      
     for currentArgument, currentValue in arguments:
+        if currentArgument in ("-e", "--EnviornmentName"):
+            environment_name = currentValue
+            print ("EnviornmentName " , currentValue)
  
-        if currentArgument in ("-r", "--RequestPath"):
+        elif currentArgument in ("-r", "--RequestPath"):
             request_path = currentValue
             print ("RequestPath " , currentValue)
              
@@ -57,6 +54,13 @@ try:
 
 except getopt.error as err:
     print (str(err))
+
+config_file_name = ".env."+environment_name
+config = dotenv_values(config_file_name)
+akamai_netstorage_ftp_username = config.get('AKAMAI_NETSTORAGE_FTP_USERNAME') 
+akamai_netstorage_ftp_password = config.get('AKAMAI_NETSTORAGE_FTP_PASSWORD')
+akamai_netstorage_ftp_hostname = config.get('AKAMAI_NETSTORAGE_FTP_HOSTNAME') 
+akamai_netstorage_ftp_path = config.get('AKAMAI_NETSTORAGE_PATH','') 
 
 
 #reading headers
