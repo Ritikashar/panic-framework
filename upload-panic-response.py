@@ -67,11 +67,16 @@ header_json = re.search(r'\{(.|\s)*\}',  headers_text)
 header_json = header_json.group(0).replace('false', 'False')
 headers = eval(header_json)
 
-print(headers) 
+print("\n",headers, "\n") 
 
-
-response = requests.get(request_path, headers=headers)
-print(response)
+if request_type in ("get", "GET", "Get"):
+    response = requests.get(request_path, headers=headers)
+elif request_type in ("post", "POST", "Post"):
+    response = requests.post(request_path, headers=headers)
+else:
+    print("Only GET and POST are supported request types")
+    
+print("\n", response, "\n")
 
         
 
