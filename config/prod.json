@@ -1,0 +1,14 @@
+{
+    "akamai": {
+        "ns_hostname": "failovernovi.ftp.upload.akamai.com",
+        "ns_prefix_path": "822471/panic-response/hotstar-x/page-compositor/prod"
+    },
+    "cluster": {
+        "mena": {
+            "pcomp_endpoint": "https://origin-hs-core-page-compositor-prod-mena.eu.hotstar-prod.com"
+        },
+        "sgp": {
+            "pcomp_endpoint": "https://origin-hs-core-page-compositor-prod.sgp.hotstar-prod.com"
+        }
+    }
+}

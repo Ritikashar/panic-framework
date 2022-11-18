@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": ["-e", "dev"],
+            "env": {
+                "AKAMAI_NS_USERNAME" : "novi_alb",
+                "AKAMAI_NS_PASSWORD": "novi_alb@12",
+                "REQUEST_PATH": "/v2/pages/home",
+                "REQUEST_METHOD":"GET",
+                "REQUEST_HEADER_FILE_LOCATION":"./request_resources/core/test/header_test1",
+                "REQUEST_BODY_FILE_LOACTION":"",
+                "AKAMAI_NS_FILE_PATH_SUFFIX":"core/home/web",
+                "PCOMP_ENV":"pp"
+            }
+        },
+    ]
+}
+
